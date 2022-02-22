@@ -12,11 +12,8 @@ class Auth:
         """ Method for requiring authentication """
         if path is None or excluded_paths is None or not len(excluded_paths):
             return True
-        # Add slash to all cases for consistency
         if path[-1] != '/':
             path += '/'
-        if excluded_paths[-1] != '/':
-            excluded_paths += '/'
         for i in excluded_paths:
             if i.endswith('*'):
                 if path.startswith(i[:1]):
