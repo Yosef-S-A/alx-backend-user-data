@@ -32,7 +32,7 @@ class Auth:
             if path_safe_slash == excluded_path_safe_slash:
                 return False
         return True
-    
+
     def authorization_header(self, request=None) -> str:
         """ Method that handles authorization header """
         if request is None:
