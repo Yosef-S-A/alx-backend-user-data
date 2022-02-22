@@ -10,19 +10,29 @@ class Auth:
 
     def require_auth(self, path: str, excluded_paths: List[str]) -> bool:
         """ Method for requiring authentication """
-        if path is None or excluded_paths is None or not len(excluded_paths):
-            return True
-        if path[-1] != '/':
-            path += '/'
-        for i in excluded_paths:
-            if i.endswith('*'):
-                if path.startswith(i[:1]):
-                    return False
-        if path in excluded_paths:
-            return False
-        else:
+        if path is None or excluded_paths is None or excluded_paths == []:
             return True
 
+        slash_tolerant = True
+
+        for excluded_path in excluded_paths:
+            path_safe_slash = path
+            excluded_path_safe_slash = excluded_path
+
+            if slash_tolerant:
+                if path_safe_slash[-1] != '/':
+                    path_safe_slash += '/'
+                if excluded_path_safe_slash[-1] != '/':
+                    excluded_path_safe_slash += '/'
+
+            if excluded_path_safe_slash[-2] == '*':
+                if excluded_path_safe_slash[:-2] in path_safe_slash:
+                    return False
+
+            if path_safe_slash == excluded_path_safe_slash:
+                return False
+        return True
+    
     def authorization_header(self, request=None) -> str:
         """ Method that handles authorization header """
         if request is None:
